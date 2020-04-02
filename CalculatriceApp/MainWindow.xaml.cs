@@ -188,7 +188,7 @@ namespace CalculatriceApp
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
-        {
+        {//pour prendre en compte les touches clavier
             //if (e.Key == Key.Enter)
             //{
             //    EcranDeTravaille += " =" + Environment.NewLine + EnleveParentheses(EcranDeTravaille);
