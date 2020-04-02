@@ -1,0 +1,138 @@
+﻿<Window x:Class="CalculatriceApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CalculatriceApp"
+        mc:Ignorable="d"
+        Title="Calculatrice" Height="490" Width="370">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style x:Key="ResultStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="LightSteelBlue" />
+        </Style>
+        <Style x:Key="OperationStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Background" Value="Lavender" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Column="0"
+                   Grid.ColumnSpan="4"
+                   Grid.Row="0"
+                   Text="{Binding EcranDeTravaille}"
+                 KeyDown="OnKeyDown"/>
+        <Button Grid.Column="0"
+                Grid.Row="1"
+                Content="+/-"
+                Style="{StaticResource OperationStyle}"
+                Click="Add_Negatif_Click"/>
+        <Button Grid.Column="1"
+                Grid.Row="1"
+                Content="("
+                Style="{StaticResource OperationStyle}"
+                Click="Operande_Click"/>
+        <Button Grid.Column="2"
+                Grid.Row="1"
+                Content=")"
+                Style="{StaticResource OperationStyle}"
+                Click="Operande_Click"/>
+        <Button Grid.Column="3"
+                Grid.Row="1"
+                Content="C"
+                Style="{StaticResource OperationStyle}"
+                Click="C_Click"/>
+        <Button Grid.Column="0"
+                Grid.Row="2"
+                Content="7"
+                Click="Operande_Click"/>
+        <Button Grid.Column="1"
+                Grid.Row="2"
+                Content="8"
+                Click="Operande_Click"/>
+        <Button Grid.Column="2"
+                Grid.Row="2"
+                Content="9"
+                Click="Operande_Click"/>
+        <Button Grid.Column="3"
+                Grid.Row="2"
+                Content="/"
+                Style="{StaticResource OperationStyle}"
+                Click="Operation_Click"/>
+        <Button Grid.Column="0"
+                Grid.Row="3"
+                Content="4"
+                Click="Operande_Click"/>
+        <Button Grid.Column="1"
+                Grid.Row="3"
+                Content="5"
+                Click="Operande_Click"/>
+        <Button Grid.Column="2"
+                Grid.Row="3"
+                Content="6"
+                Click="Operande_Click"/>
+        <Button Grid.Column="3"
+                Grid.Row="3"
+                Content="*"
+                Style="{StaticResource OperationStyle}"
+                Click="Operation_Click"/>
+        <Button Grid.Column="0"
+                Grid.Row="4"
+                Content="1"
+                Click="Operande_Click"/>
+        <Button Grid.Column="1"
+                Grid.Row="4"
+                Content="2"
+                Click="Operande_Click"/>
+        <Button Grid.Column="2"
+                Grid.Row="4"
+                Content="3"
+                Click="Operande_Click"/>
+        <Button Grid.Column="3"
+                Grid.Row="4"
+                Content="-"
+                Style="{StaticResource OperationStyle}"
+                Click="Operation_Click"/>
+        <Button Grid.Column="0"
+                Grid.Row="5"
+                Content="0"
+                Click="Operande_Click"/>
+        <Button Grid.Column="1"
+                Grid.Row="5"
+                Content="."
+                Click="Point_Click"/>
+        <Button Grid.Column="2"
+                Grid.Row="5"
+                Content="="
+                Style="{StaticResource ResultStyle}"
+                Click="Resultat_Click"/>
+        <Button Grid.Column="3"
+                Grid.Row="5"
+                Content="+"
+                Style="{StaticResource OperationStyle}"
+                Click="Operation_Click"/>
+    </Grid>
+</Window>
