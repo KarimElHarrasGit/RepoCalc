@@ -5,15 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CalculatriceApp"
         mc:Ignorable="d"
-        Title="Calculatrice" Height="490" Width="370">
+        Title="Calculatrice" Height="470" Width="350">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="20" />
         </Style>
-        <Style TargetType="TextBlock">
+        <Style TargetType="TextBox">
             <Setter Property="FontSize" Value="30" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
         <Style x:Key="ResultStyle" TargetType="Button">
             <Setter Property="FontSize" Value="20" />
@@ -43,7 +41,7 @@
         <TextBox Grid.Column="0"
                    Grid.ColumnSpan="4"
                    Grid.Row="0"
-                   Text="{Binding EcranDeTravaille}"
+                   Text="{Binding EcranDeTravaille, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  KeyDown="OnKeyDown"/>
         <Button Grid.Column="0"
                 Grid.Row="1"

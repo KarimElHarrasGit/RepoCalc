@@ -123,6 +123,74 @@ namespace CalculatriceApp
                     }
                 }
             }
+            for (int i = 1; i < text.Length; i++)
+            {
+                if (text[i] == '-' && (text[i - 1] == '*' || text[i - 1] == '/'))
+                {
+                    for (int j = i - 1; j >= 0; j--)
+                    {
+                        if (text[j] == '+')
+                        {
+                            StringBuilder stringBuilder = new StringBuilder(text);
+                            stringBuilder[j] = '-';
+                            text = stringBuilder.ToString();
+                            text = text.Remove(i, 1);
+                            break;
+                        }
+                        else if (text[j] == '-')
+                        {
+                            StringBuilder stringBuilder = new StringBuilder(text);
+                            stringBuilder[j] = '+';
+                            text = stringBuilder.ToString();
+                            text = text.Remove(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 1; i < text.Length; i++)
+            {
+                if (text[i] == '-' && (text[i - 1] == '-' || text[i - 1] == '+'))
+                {
+                    if (text[i - 1] == '-')
+                    {
+                        StringBuilder stringBuilder = new StringBuilder(text);
+                        stringBuilder[i] = '+';
+                        text = stringBuilder.ToString();
+                        text = text.Remove(i - 1, 1);
+                    }
+                    else
+                    {
+                        StringBuilder stringBuilder = new StringBuilder(text);
+                        stringBuilder[i] = '-';
+                        text = stringBuilder.ToString();
+                        text = text.Remove(i - 1, 1);
+                    }
+
+                }
+                else if (text[i] == '+' && (text[i - 1] == '-' || text[i - 1] == '+'))
+                {
+                    if (text[i - 1] == '-')
+                    {
+                        StringBuilder stringBuilder = new StringBuilder(text);
+                        stringBuilder[i] = '-';
+                        text = stringBuilder.ToString();
+                        text = text.Remove(i - 1, 1);
+                    }
+                    else
+                    {
+                        StringBuilder stringBuilder = new StringBuilder(text);
+                        stringBuilder[i] = '+';
+                        text = stringBuilder.ToString();
+                        text = text.Remove(i - 1, 1);
+                    }
+                }
+            }
+
+            if (text[0] == '-')
+                text = 0 + text;
+
             return Calculate(text);
         }
 
@@ -135,64 +203,126 @@ namespace CalculatriceApp
 
         private string Calculate(string expressionACalculer)
         {
-            double resultatFinal = Substract(expressionACalculer);
+            double resultatFinal = AddSubstract(expressionACalculer);
             return resultatFinal.ToString();
         }
 
-        private double Substract(string expressionToSubstract)
+        private double AddSubstract(string expression)
         {
-            string[] chaine = expressionToSubstract.Split('-');
-            double total = Add(chaine[0]);
-            for (int i = 1; i < chaine.Length; i++)
+            string[] chaine = expression.Split('-');
+            List<string> textList = new List<string>();
+
+            for (int i = 0; i < chaine.Length; i++)
             {
-                total -= Add(chaine[i]);
+                textList.Add(chaine[i]);
+                if (i != chaine.Length - 1)
+                {
+                    textList.Add("-");
+                }
+            }
+
+            for (int i = 0; i < textList.Count; i++)
+            {
+                if (textList[i].Contains('+') && textList[i].Length > 1)
+                {
+                    string[] textPart = textList[i].Split('+');
+                    textList.RemoveAt(i);
+
+                    for (int j = textPart.Length - 1; j >= 0; j--)
+                    {
+                        textList.Insert(i, textPart[j]);
+                        if (j != 0)
+                        {
+                            textList.Insert(i, "+");
+                        }
+                    }
+                }
+            }
+
+            double total;
+            if (textList[0].Contains('*') || textList[0].Contains('/'))
+            {
+                total = DivideMultiply(textList[0]);
+            }
+            else
+            {
+                total = Convert.ToDouble(textList[0]);
+            }
+            for (int i = 2; i < textList.Count; i += 2)
+            {
+                if (textList[i - 1] == "-")
+                {
+                    total -= DivideMultiply(textList[i]);
+                }
+                else if (textList[i - 1] == "+")
+                {
+                    total += DivideMultiply(textList[i]);
+                }
             }
 
             return total;
         }
 
-        private double Add(string expressionToAdd)
+
+
+        private double DivideMultiply(string expression)
         {
-            string[] chaine = expressionToAdd.Split('+');
-            double total = Multiply(chaine[0]);
-            for (int i = 1; i < chaine.Length; i++)
+
+            string[] chaine = expression.Split('*');
+            List<string> textList = new List<string>();
+
+            for (int i = 0; i < chaine.Length; i++)
             {
-                total += Multiply(chaine[i]);
+                textList.Add(chaine[i]);
+                if (i != chaine.Length - 1)
+                {
+                    textList.Add("*");
+                }
+            }
+
+            for (int i = 0; i < textList.Count; i++)
+            {
+                if (textList[i].Contains('/') && textList[i].Length > 1)
+                {
+                    string[] textPart = textList[i].Split('/');
+                    textList.RemoveAt(i);
+
+                    for (int j = textPart.Length - 1; j >= 0; j--)
+                    {
+                        textList.Insert(i, textPart[j]);
+                        if (j != 0)
+                        {
+                            textList.Insert(i, "/");
+                        }
+                    }
+                }
+            }
+
+            double total = Convert.ToDouble(textList[0]);
+            for (int i = 2; i < textList.Count; i += 2)
+            {
+                if (textList[i - 1] == "/")
+                {
+                    total = total / Convert.ToDouble(textList[i]);
+                }
+                else if (textList[i - 1] == "*")
+                {
+                    total = total * Convert.ToDouble(textList[i]);
+                }
             }
 
             return total;
+            
         }
 
-        private double Multiply(string expressionToMultiply)
-        {
-            string[] chaine = expressionToMultiply.Split('*');
-            double total = Devide(chaine[0]);
-            for (int i = 1; i < chaine.Length; i++)
-            {
-                total *= Devide(chaine[i]);
-            }
-
-            return total;
-        }
-
-        private double Devide(string expressionToDevide)
-        {
-            string[] chaine = expressionToDevide.Split('/');
-            double total = Convert.ToDouble(chaine[0]);
-            for (int i = 1; i < chaine.Length; i++)
-            {
-                total /= Convert.ToDouble(chaine[i]);
-            }
-
-            return total;
-        }
-
+        
         private void OnKeyDown(object sender, KeyEventArgs e)
-        {//pour prendre en compte les touches clavier
-            //if (e.Key == Key.Enter)
-            //{
-            //    EcranDeTravaille += " =" + Environment.NewLine + EnleveParentheses(EcranDeTravaille);
-            //}
+        {
+            //System.Console.WriteLine(">" + EcranDeTravaille);
+            if (e.Key == Key.Enter)
+            {
+                EcranDeTravaille += " =" + Environment.NewLine + EnleveParentheses(EcranDeTravaille);
+            }
         }
     }
 }
