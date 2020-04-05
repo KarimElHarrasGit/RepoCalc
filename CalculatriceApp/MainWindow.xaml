@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CalculatriceApp"
         mc:Ignorable="d"
-        Title="Calculatrice" Height="470" Width="350">
+        Title="Calculatrice" Height="470" Width="350"
+        WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="20" />
@@ -45,24 +46,24 @@
                  KeyDown="OnKeyDown"/>
         <Button Grid.Column="0"
                 Grid.Row="1"
-                Content="%"
-                Style="{StaticResource OperationStyle}"
-                Click="Add_Negatif_Click"/>
-        <Button Grid.Column="1"
-                Grid.Row="1"
                 Content="("
                 Style="{StaticResource OperationStyle}"
                 Click="Operande_Click"/>
-        <Button Grid.Column="2"
+        <Button Grid.Column="1"
                 Grid.Row="1"
                 Content=")"
                 Style="{StaticResource OperationStyle}"
                 Click="Operande_Click"/>
-        <Button Grid.Column="3"
+        <Button Grid.Column="2"
                 Grid.Row="1"
                 Content="C"
                 Style="{StaticResource OperationStyle}"
                 Click="C_Click"/>
+        <Button Grid.Column="3"
+                Grid.Row="1"
+                Content="&lt;-"
+                Style="{StaticResource OperationStyle}"
+                Click="Delete_Last_Char_Click"/>
         <Button Grid.Column="0"
                 Grid.Row="2"
                 Content="7"
