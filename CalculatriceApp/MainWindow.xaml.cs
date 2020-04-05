@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,7 +90,8 @@ namespace CalculatriceApp
 
         private void Resultat_Click(object sender, RoutedEventArgs e)
         {
-            EcranDeTravaille += " =" + Environment.NewLine + EnleveParentheses(EcranDeTravaille);
+            if (CheckValidityTextEntered(EcranDeTravaille))
+                EcranDeTravaille += " =" + Environment.NewLine + EnleveParentheses(EcranDeTravaille);
         }
 
         private void Point_Click(object sender, RoutedEventArgs e)
@@ -99,11 +101,31 @@ namespace CalculatriceApp
 
         private void Add_Negatif_Click(object sender, RoutedEventArgs e)
         {
-            EcranDeTravaille += " ";
+            System.Console.WriteLine(">" + EcranDeTravaille);
+            var isCommandArray = Regex.IsMatch(EcranDeTravaille, @"^[0-9|\+|\-|\*|\/|\.|\(|\)]*$");
+            System.Console.WriteLine(">" + isCommandArray);
+        }
+
+        private Boolean CheckValidityTextEntered(string text)
+        {
+            if (EcranDeTravaille != null)
+            {
+                if (Regex.IsMatch(EcranDeTravaille, @"^[0-9|\+|\-|\*|\/|\.|\(|\)]*$"))
+                    return true;
+                else
+                {
+                    MessageBox.Show("Veuillez saisir que les caractères correspondant aux boutons de l'interface SVP", "Erreur détectée dans le text saisi", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return false;
+                }
+            }
+            else
+                return false;
+
         }
 
         private string EnleveParentheses(string text)
         {
+
             while (text.Contains('(') && text.Contains(')'))
             {
                 int openIndex = 0;
@@ -312,13 +334,12 @@ namespace CalculatriceApp
             }
 
             return total;
-            
+
         }
 
-        
+
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            //System.Console.WriteLine(">" + EcranDeTravaille);
             if (e.Key == Key.Enter)
             {
                 EcranDeTravaille += " =" + Environment.NewLine + EnleveParentheses(EcranDeTravaille);

@@ -45,7 +45,7 @@
                  KeyDown="OnKeyDown"/>
         <Button Grid.Column="0"
                 Grid.Row="1"
-                Content="+/-"
+                Content="%"
                 Style="{StaticResource OperationStyle}"
                 Click="Add_Negatif_Click"/>
         <Button Grid.Column="1"
