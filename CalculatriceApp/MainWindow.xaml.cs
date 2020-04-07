@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -56,11 +57,31 @@ namespace CalculatriceApp
             set { SetValue(value); }
         }
 
+        public ObservableCollection<string> History
+        {
+            get { return GetValue<ObservableCollection<string>>(); }
+            set { SetValue(value); }
+        }
+        public string SelectionnedExpression
+        {
+            get { return GetValue<string>(); }
+            set { SetValue(value); }
+        }
+
+        public Visibility VisibilityOfListBox
+        {
+            get { return GetValue<Visibility>(); }
+            set { SetValue(value); }
+        }
+
 
         public MainWindow()
         {
             this.DataContext = this;
             InitializeComponent();
+            SelectionnedExpression = "";
+            History = new ObservableCollection<string>();
+            VisibilityOfListBox = Visibility.Hidden;
         }
 
 
@@ -96,8 +117,11 @@ namespace CalculatriceApp
         {
             if (CheckValidityTextEntered())
             {
+                //formater le résultat en séparant les milliers
                 System.Globalization.CultureInfo frCult = System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR");
                 string formatedResult = string.Format(frCult, "{0:n}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
+                //ajouter l'expression et son résultat a l'historique
+                History.Add(EcranDeTravaille + " = " + formatedResult);
                 EcranDeTravaille += " =" + Environment.NewLine + formatedResult;
             }
         }
@@ -113,6 +137,7 @@ namespace CalculatriceApp
                 {
                     System.Globalization.CultureInfo frCult = System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR");
                     string formatedResult = string.Format(frCult, "{0:n}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
+                    History.Add(EcranDeTravaille + " = " + formatedResult);
                     EcranDeTravaille += " =" + Environment.NewLine + formatedResult;
                 }
             }
@@ -355,5 +380,22 @@ namespace CalculatriceApp
         }
 
         #endregion
+
+        private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            //afficher l'expression selectionné par double click
+            VisibilityOfListBox = Visibility.Hidden;
+            EcranDeTravaille = SelectionnedExpression;
+        }
+
+
+        private void H_Click(object sender, RoutedEventArgs e)
+        {
+            //afficher cacher l'historique
+            if (VisibilityOfListBox== Visibility.Hidden)
+                VisibilityOfListBox = Visibility.Visible;
+            else
+                VisibilityOfListBox = Visibility.Hidden;
+        }
     }
 }

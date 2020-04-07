@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CalculatriceApp"
         mc:Ignorable="d"
-        Title="Calculatrice" Height="470" Width="350"
+        Title="Calculatrice" Height="570" Width="350"
         WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <Style TargetType="Button">
@@ -38,12 +38,21 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBox Grid.Column="0"
                    Grid.ColumnSpan="4"
                    Grid.Row="0"
                    Text="{Binding EcranDeTravaille, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  KeyDown="OnKeyDown"/>
+        <ListBox Grid.Column="0"
+                 Grid.Row="0"
+                 Grid.ColumnSpan="4"
+                 FontSize="20"
+                 Visibility="{Binding VisibilityOfListBox}"
+                 ItemsSource="{Binding History}"
+                 SelectedItem="{Binding SelectionnedExpression}" MouseDoubleClick="ListBox_MouseDoubleClick"/>
         <Button Grid.Column="0"
                 Grid.Row="1"
                 Content="("
@@ -133,5 +142,11 @@
                 Content="+"
                 Style="{StaticResource OperationStyle}"
                 Click="Operation_Click"/>
+        
+        <Button Grid.Column="3"
+                Grid.Row="7"
+                Content="H"
+                Style="{StaticResource OperationStyle}"
+                Click="H_Click"/>
     </Grid>
 </Window>
