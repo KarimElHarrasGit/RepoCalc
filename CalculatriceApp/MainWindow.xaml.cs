@@ -95,7 +95,11 @@ namespace CalculatriceApp
         private void Resultat_Click(object sender, RoutedEventArgs e)
         {
             if (CheckValidityTextEntered())
-                EcranDeTravaille += " =" + Environment.NewLine + CalculateEcranDeTravaille(EcranDeTravaille);
+            {
+                System.Globalization.CultureInfo frCult = System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR");
+                string formatedResult = string.Format(frCult, "{0:n}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
+                EcranDeTravaille += " =" + Environment.NewLine + formatedResult;
+            }
         }
 
         #endregion
@@ -106,7 +110,11 @@ namespace CalculatriceApp
             if (e.Key == Key.Enter)
             {
                 if (CheckValidityTextEntered())
-                    EcranDeTravaille += " =" + Environment.NewLine + CalculateEcranDeTravaille(EcranDeTravaille);
+                {
+                    System.Globalization.CultureInfo frCult = System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR");
+                    string formatedResult = string.Format(frCult, "{0:n}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
+                    EcranDeTravaille += " =" + Environment.NewLine + formatedResult;
+                }
             }
         }
 
@@ -146,8 +154,7 @@ namespace CalculatriceApp
                     {
                         closeIndex = i;
 
-                        //ajout du resultat du calcule de l'expression qui est a l'interieur des parentheses
-                        //enlever les parentheses et leur contenu  
+                        //enleve les parentheses et leur contenu puis ajout du resultat du calcule de l'expression qui est a l'interieur des parentheses
                         text = text.Remove(openIndex, closeIndex - openIndex + 1).Insert(openIndex, CalculateExpressionWithinParentheses(openIndex, closeIndex, text));
 
                         break;
@@ -156,9 +163,9 @@ namespace CalculatriceApp
             }
 
             // en cas de d'une expression de type operande*-operande ou operande/-operande, on supprime le signe -
-            // et on remplace le signe qui se place avant cette expression par son inverse s'il est + ou -
+            // puis on cherche s'il y a un signe - ou + qui precede cette expression, si c le cas on le remplace par son inverse : - devient + et vice versa
             // ex : +operande*-operande devient -operande*operande
-            // sinon on ajoute - au tout debut du text
+            // sinon on ajoute - au tout debut de l'expression
             // ex : operande*operande*-operande devient -operande*operande*operande
             for (int i = 1; i < text.Length; i++)
             {
@@ -234,13 +241,14 @@ namespace CalculatriceApp
 
         private double AddSubstract(string expression)
         {
-            string[] chaine = expression.Split('-');
+            // on décompose expression dans la collection textList s'il contient -
+            string[] chaine1 = expression.Split('-');
             List<string> textList = new List<string>();
 
-            for (int i = 0; i < chaine.Length; i++)
+            for (int i = 0; i < chaine1.Length; i++)
             {
-                textList.Add(chaine[i]);
-                if (i != chaine.Length - 1)
+                textList.Add(chaine1[i]);
+                if (i != chaine1.Length - 1)
                 {
                     textList.Add("-");
                 }
@@ -248,14 +256,15 @@ namespace CalculatriceApp
 
             for (int i = 0; i < textList.Count; i++)
             {
+                // on décompose les valeurs de la collection textList s'il contient +
                 if (textList[i].Contains('+') && textList[i].Length > 1)
                 {
-                    string[] textPart = textList[i].Split('+');
+                    string[] chaine2 = textList[i].Split('+');
                     textList.RemoveAt(i);
 
-                    for (int j = textPart.Length - 1; j >= 0; j--)
+                    for (int j = chaine2.Length - 1; j >= 0; j--)
                     {
-                        textList.Insert(i, textPart[j]);
+                        textList.Insert(i, chaine2[j]);
                         if (j != 0)
                         {
                             textList.Insert(i, "+");
@@ -265,6 +274,7 @@ namespace CalculatriceApp
             }
 
             double total;
+            // si textList contient que des operations de type * ou /, on appele DivideMultiply
             if (textList[0].Contains('*') || textList[0].Contains('/'))
             {
                 total = DivideMultiply(textList[0]);
@@ -273,6 +283,8 @@ namespace CalculatriceApp
             {
                 total = Convert.ToDouble(textList[0]);
             }
+
+            // on calcule le total en parcourant les operations - + puis les operandes contenu dans textList
             for (int i = 2; i < textList.Count; i += 2)
             {
                 if (textList[i - 1] == "-")
@@ -292,14 +304,14 @@ namespace CalculatriceApp
 
         private double DivideMultiply(string expression)
         {
-
-            string[] chaine = expression.Split('*');
+            // on décompose expression dans la collection textList s'il contient *
+            string[] chaine1 = expression.Split('*');
             List<string> textList = new List<string>();
 
-            for (int i = 0; i < chaine.Length; i++)
+            for (int i = 0; i < chaine1.Length; i++)
             {
-                textList.Add(chaine[i]);
-                if (i != chaine.Length - 1)
+                textList.Add(chaine1[i]);
+                if (i != chaine1.Length - 1)
                 {
                     textList.Add("*");
                 }
@@ -309,12 +321,13 @@ namespace CalculatriceApp
             {
                 if (textList[i].Contains('/') && textList[i].Length > 1)
                 {
-                    string[] textPart = textList[i].Split('/');
+                    // on décompose les valeurs de la collection textList s'il contient /
+                    string[] chaine2 = textList[i].Split('/');
                     textList.RemoveAt(i);
 
-                    for (int j = textPart.Length - 1; j >= 0; j--)
+                    for (int j = chaine2.Length - 1; j >= 0; j--)
                     {
-                        textList.Insert(i, textPart[j]);
+                        textList.Insert(i, chaine2[j]);
                         if (j != 0)
                         {
                             textList.Insert(i, "/");
@@ -323,16 +336,17 @@ namespace CalculatriceApp
                 }
             }
 
+            // on calcule le total en parcourant les operations / * puis les operandes contenu dans textList
             double total = Convert.ToDouble(textList[0]);
             for (int i = 2; i < textList.Count; i += 2)
             {
                 if (textList[i - 1] == "/")
                 {
-                    total = total / Convert.ToDouble(textList[i]);
+                    total /= Convert.ToDouble(textList[i]);
                 }
                 else if (textList[i - 1] == "*")
                 {
-                    total = total * Convert.ToDouble(textList[i]);
+                    total *= Convert.ToDouble(textList[i]);
                 }
             }
 
