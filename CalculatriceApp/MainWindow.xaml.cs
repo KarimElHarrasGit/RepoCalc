@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Globalization;
 
 namespace CalculatriceApp
 {
@@ -50,6 +51,7 @@ namespace CalculatriceApp
 
         #endregion
 
+        CultureInfo frCult = CultureInfo.CreateSpecificCulture("fr-FR");
 
         public string EcranDeTravaille
         {
@@ -118,8 +120,7 @@ namespace CalculatriceApp
             if (CheckValidityTextEntered())
             {
                 //formater le résultat en séparant les milliers
-                System.Globalization.CultureInfo frCult = System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR");
-                string formatedResult = string.Format(frCult, "{0:n}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
                 //ajouter l'expression et son résultat a l'historique
                 History.Add(EcranDeTravaille + " = " + formatedResult);
                 EcranDeTravaille += " =" + Environment.NewLine + formatedResult;
@@ -135,8 +136,7 @@ namespace CalculatriceApp
             {
                 if (CheckValidityTextEntered())
                 {
-                    System.Globalization.CultureInfo frCult = System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR");
-                    string formatedResult = string.Format(frCult, "{0:n}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
+                    string formatedResult = string.Format(frCult, "{0:#,0.############}", double.Parse(CalculateEcranDeTravaille(EcranDeTravaille)));
                     History.Add(EcranDeTravaille + " = " + formatedResult);
                     EcranDeTravaille += " =" + Environment.NewLine + formatedResult;
                 }
@@ -145,13 +145,13 @@ namespace CalculatriceApp
 
         private Boolean CheckValidityTextEntered()
         {
-            if (EcranDeTravaille != null)
+            if (!string.IsNullOrWhiteSpace(EcranDeTravaille))
             {
                 if (Regex.IsMatch(EcranDeTravaille, @"^[0-9|\+|\-|\*|\/|\.|\(|\)]*$"))
                     return true;
                 else
                 {
-                    MessageBox.Show("Veuillez saisir que les caractères correspondant aux boutons de l'interface SVP", "Erreur détectée dans le text saisi", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Veuillez saisir que les caractères correspondant aux boutons de l'interface et ne pas inclure d'espace SVP", "Erreur détectée dans le text saisi", MessageBoxButton.OK, MessageBoxImage.Information);
                     return false;
                 }
             }
@@ -392,10 +392,80 @@ namespace CalculatriceApp
         private void H_Click(object sender, RoutedEventArgs e)
         {
             //afficher cacher l'historique
-            if (VisibilityOfListBox== Visibility.Hidden)
+            if (VisibilityOfListBox == Visibility.Hidden)
                 VisibilityOfListBox = Visibility.Visible;
             else
                 VisibilityOfListBox = Visibility.Hidden;
+        }
+
+        private void Sin_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Sin(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("sin(" + EcranDeTravaille + ") = " + formatedResult);
+                EcranDeTravaille = "sin(" + EcranDeTravaille + ") =" + Environment.NewLine + formatedResult;
+            }
+        }
+
+        private void Cos_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Cos(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("cos(" + EcranDeTravaille + ") = " + formatedResult);
+                EcranDeTravaille = "cos(" + EcranDeTravaille + ") =" + Environment.NewLine + formatedResult;
+            }
+        }
+
+        private void Tan_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Tan(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("tan(" + EcranDeTravaille + ") = " + formatedResult);
+                EcranDeTravaille = "tan(" + EcranDeTravaille + ") =" + Environment.NewLine + formatedResult;
+            }
+        }
+
+        private void SQRT_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Sqrt(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("sqrt(" + EcranDeTravaille + ") = " + formatedResult);
+                EcranDeTravaille = "sqrt(" + EcranDeTravaille + ") =" + Environment.NewLine + formatedResult;
+            }
+        }
+
+        private void Log_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Log10(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("log(" + EcranDeTravaille + ") = " + formatedResult);
+                EcranDeTravaille = "log(" + EcranDeTravaille + ") =" + Environment.NewLine + formatedResult;
+            }
+        }
+
+        private void Exp_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Exp(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("e^" + EcranDeTravaille + " = " + formatedResult);
+                EcranDeTravaille = "e^" + EcranDeTravaille + " =" + Environment.NewLine + formatedResult;
+            }
+        }
+
+        private void Ln_Click(object sender, RoutedEventArgs e)
+        {
+            if (CheckValidityTextEntered())
+            {
+                string formatedResult = string.Format(frCult, "{0:#,0.############}", Math.Log(Convert.ToDouble(EcranDeTravaille)));
+                History.Add("ln(" + EcranDeTravaille + ") = " + formatedResult);
+                EcranDeTravaille = "ln(" + EcranDeTravaille + ") =" + Environment.NewLine + formatedResult;
+            }
         }
     }
 }
